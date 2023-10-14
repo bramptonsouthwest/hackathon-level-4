@@ -1,16 +1,40 @@
 namespace SpriteKind {
     export const Boss = SpriteKind.create()
     export const Supersword = SpriteKind.create()
+    export const shooter = SpriteKind.create()
 }
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    mySprite = sprites.create(img`
+        . . . . . . . 2 . . . . . . . . 
+        . . . . . . . 2 2 . . . . . . . 
+        . . . . . . . 2 2 . . . . . . . 
+        . . . . . . . 2 2 . . . . . . . 
+        . . . . . . 2 2 2 2 . . . . . . 
+        . . . . 2 2 2 2 2 2 2 . . . . . 
+        . . . . 2 2 2 2 2 2 2 2 . . . . 
+        . . . . 2 2 2 2 2 2 2 2 . . . . 
+        . . . . . . . 2 2 2 . . . . . . 
+        . . . . . . . 2 2 2 . . . . . . 
+        . . . . . . . 2 2 2 . . . . . . 
+        . . 2 2 2 2 2 2 2 2 2 2 2 2 . . 
+        . . 2 2 2 2 2 2 2 2 2 2 2 2 . . 
+        . . 2 2 2 2 2 2 2 2 2 2 2 2 . . 
+        . . . . . . . 2 2 2 . . . . . . 
+        . . . . . . . 2 2 2 . . . . . . 
+        `, SpriteKind.shooter)
+    mySprite.setVelocity(0, 50)
+    mySprite.setPosition(player1.x, player1.y)
+})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Supersword, function (sprite, otherSprite) {
     otherSprite.follow(sprite, 100)
-})
-sprites.onOverlap(SpriteKind.Supersword, SpriteKind.Boss, function (sprite, otherSprite) {
-	
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
     info.changeLifeBy(-1)
     music.play(music.melodyPlayable(music.bigCrash), music.PlaybackMode.UntilDone)
+    sprites.destroy(otherSprite)
+})
+sprites.onOverlap(SpriteKind.shooter, SpriteKind.Boss, function (sprite, otherSprite) {
+    sprites.destroy(dracula, effects.confetti, 5000)
 })
 sprites.onCreated(SpriteKind.Projectile, function (sprite) {
     sprite.follow(player1, 50)
@@ -22,6 +46,8 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Boss, function (sprite, otherSpr
     music.play(music.melodyPlayable(music.bigCrash), music.PlaybackMode.UntilDone)
 })
 let bat: Sprite = null
+let mySprite: Sprite = null
+let dracula: Sprite = null
 let player1: Sprite = null
 info.setLife(3)
 info.setScore(0)
@@ -188,7 +214,7 @@ let super_sword = sprites.create(img`
     . . . . . . 3 3 3 . . . . . . . 
     `, SpriteKind.Supersword)
 super_sword.setPosition(90, 49)
-let dracula = sprites.create(img`
+dracula = sprites.create(img`
     ......fffff.........
     .....fddfdd.........
     .....fddddd.........
